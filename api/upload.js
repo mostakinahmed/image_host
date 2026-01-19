@@ -1,29 +1,6 @@
-import { handleUpload } from "@vercel/blob/client";
+import { put } from "@vercel/blob";
 
-export default async function handler(request, response) {
-  const body = await request.json();
-
-  try {
-    const jsonResponse = await handleUpload({
-      body,
-      request,
-      onBeforeGenerateToken: async (pathname) => {
-        // This is where you can limit what files are allowed
-        return {
-          allowedContentTypes: ["image/jpeg", "image/png", "image/webp"],
-          tokenPayload: JSON.stringify({
-            // optional data to send to the callback
-          }),
-        };
-      },
-      onUploadCompleted: async ({ blob, tokenPayload }) => {
-        // Logic to run after upload finishes
-        console.log("Upload finished:", blob.url);
-      },
-    });
-
-    return response.status(200).json(jsonResponse);
-  } catch (error) {
-    return response.status(400).json({ error: error.message });
-  }
+export default async function handler(req, res) {
+  const blob = await put(req.query.filename, req, { access: "public" });
+  res.status(200).json(blob);
 }
