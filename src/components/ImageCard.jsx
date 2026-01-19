@@ -1,7 +1,12 @@
+import { useState } from "react";
+
 export default function ImageCard({ image, onDelete }) {
+  const [copied, setCopied] = useState(false);
+
   const copyLink = async () => {
     await navigator.clipboard.writeText(image.url);
-    alert("Image link copied!");
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
   };
 
   const deleteImage = async () => {
@@ -20,14 +25,16 @@ export default function ImageCard({ image, onDelete }) {
       <div className="p-2 flex justify-between gap-2">
         <button
           onClick={copyLink}
-          className="flex-1 text-sm px-3 py-1 rounded bg-gray-200 hover:bg-gray-300"
+          className="flex-1 text-sm px-3 py-1 rounded transition
+            bg-gray-200 hover:bg-gray-300"
         >
-          Copy Link
+          {copied ? "Copied ✓" : "Copy Link"}
         </button>
 
         <button
           onClick={deleteImage}
-          className="flex-1 text-sm px-3 py-1 rounded bg-red-500 text-white hover:bg-red-600"
+          className="flex-1 text-sm px-3 py-1 rounded
+            bg-red-500 text-white hover:bg-red-600"
         >
           Delete
         </button>
