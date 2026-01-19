@@ -1,25 +1,33 @@
 export default function ImageCard({ image, onDelete }) {
-  const copyUrl = () => navigator.clipboard.writeText(image.url);
+  const copyLink = async () => {
+    await navigator.clipboard.writeText(image.url);
+    alert("Image link copied!");
+  };
 
-  const remove = async () => {
+  const deleteImage = async () => {
     await fetch(`/api/delete?url=${encodeURIComponent(image.url)}`);
     onDelete();
   };
 
   return (
-    <div className="relative group">
-      <img src={image.url} className="rounded-xl aspect-square object-cover" />
+    <div className="rounded-xl overflow-hidden shadow bg-white">
+      <img
+        src={image.url}
+        alt="uploaded"
+        className="w-full h-40 object-cover"
+      />
 
-      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center gap-2">
+      <div className="p-2 flex justify-between gap-2">
         <button
-          onClick={copyUrl}
-          className="px-3 py-1 bg-white text-sm rounded"
+          onClick={copyLink}
+          className="flex-1 text-sm px-3 py-1 rounded bg-gray-200 hover:bg-gray-300"
         >
-          Copy
+          Copy Link
         </button>
+
         <button
-          onClick={remove}
-          className="px-3 py-1 bg-red-500 text-white text-sm rounded"
+          onClick={deleteImage}
+          className="flex-1 text-sm px-3 py-1 rounded bg-red-500 text-white hover:bg-red-600"
         >
           Delete
         </button>
